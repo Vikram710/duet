@@ -1,0 +1,15 @@
+body{
+    text-align: center;
+}
+button{
+    padding:15px;
+    margin-top:20px;
+    border-radius: 10px;
+    border:none;
+}
+
+img{
+    height:480px;
+    width:480px;
+    display:none;
+}
