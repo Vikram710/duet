@@ -2,14 +2,30 @@ let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 canvas.width = canvas.scrollWidth;
 canvas.height = canvas.scrollHeight;
-let button = document.getElementById("start").addEventListener("click",start);
+let button1 = document.getElementById("start").addEventListener("click",start);
+let button2 = document.getElementById("pause").addEventListener("click",paused);
+let button3 = document.getElementById("restart").addEventListener("click",restart);
 let img=document.getElementById("img");
 let img1=document.getElementById("img1");
 let img2=document.getElementById("img2");
+var pause=false;
+var crash=false;
+var n=false;
+var k=0;
+
+function paused(){
+  document.getElementById("start").innerHTML="RESUME";
+  return pause=!pause , k=0;
+}
 function open(){
   ctx.drawImage(img1,0,0,480,480);
 }
-
+function wait(ms){
+  var d1=new Date();
+  var d2=null;
+  do{d2= new Date();}
+  while(d2-d1<ms);
+}
 
 class Obstacle{
   constructor(width, height, posX,posY){
@@ -24,7 +40,7 @@ class Obstacle{
     ctx.fillRect(this.posX,this.posY,this.width,this.height);
   }
   update_o(){
-    if (temp_score<10){
+    if (temp_score<20){
       this.speed=1;
     }
     else if(temp_score<40){
@@ -39,7 +55,11 @@ class Obstacle{
     this.posY+=this.speed;
   }
   stop(){
+    this.cspeed=this.speed;
     this.speed=0;
+  }
+  play(){
+    this.speed=this.cspeed;
   }
 }
 
@@ -53,8 +73,10 @@ class Input{
         case 39:
             duet.moveRight();
           break;
+
       }
-    })
+    });
+
   }
 }
 
@@ -114,28 +136,27 @@ class Duet{
     crash(other){
       if(this.xr-this.ballr<other.posX+other.width && this.xr+this.ballr>other.posX &&
          this.yr-this.ballr<other.posY+other.height && this.yr+this.ballr>other.posY){
-        return true;
+        crash=true;
       }
       if(this.xb-this.ballr<other.posX+other.width && this.xb+this.ballr>other.posX &&
          this.yb-this.ballr<other.posY+other.height && this.yb+this.ballr>other.posY){
-        return true;
+        crash=true;
       }
+      return crash;
     }
 
-  stop(){
-    this.angle=0;
-  }
+
     
 }
 
 class Score{
-  constructor(x, y, color){
+  constructor(x, y){
     this.x = x;
     this.y = y;
   }
   draw(ctx){
     ctx.font="20px Arial";
-    ctx.fillStyle= "color";
+    ctx.fillStyle= "white";
     ctx.fillText(this.text, this.x, this.y);
   }
 }
@@ -157,25 +178,36 @@ class Sound {
 }
 
 var sound = new Sound("song.mp3")
-var obj = [new Obstacle(70,30 ,200,0)]
+var obj = [new Obstacle(80,30 ,130,0)]
 var duet = new Duet(50,240,400,0.12,0); 
 new Input();
-var score = new Score(350, 30, "black");
+var score = new Score(350, 30);
+var final=new Score(200,400);     
 var count = 0;
 var y=0;
 var temp_score=0;
+var final_score=0;
 
 function updategame(){
   for ( var i = 0; i<obj.length; i++){
     if(duet.crash(obj[i])){ 
       obj[i].stop();
-      duet.stop();
+
       sound.stop();
       ctx.drawImage(img2,0,0,480,480);
+      final_score=temp_score;
+      final.text="SCORE: "+final_score;
+      final.draw(ctx);
       return;
       
     }
   }
+
+  if (pause){
+    sound.stop();
+    return;
+  }
+
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
   
@@ -196,11 +228,11 @@ function updategame(){
   duet.draw(ctx);
   duet.clear();
 
-  var max = 120;
-  var min = 300;
+  var min = 120;
+  var max = 300;
   var x = Math.floor(Math.random()*(max-min) + min);
 
-  if(temp_score<10){
+  if(temp_score<20){
     y=y+1;
     if((y/150)%1==0){
       obj.push(new Obstacle(70,30,x,0));
@@ -225,9 +257,20 @@ function updategame(){
   }
   setTimeout(updategame,16);
 }
+
 function start(){
-  updategame();  
+  pause=false;
+  k=k+1;
+  if (k==1){
+    document.getElementById("start").innerHTML="PLAY";
+    updategame(); 
+
+  }
+ 
 }
+
+
+
 
 
 
