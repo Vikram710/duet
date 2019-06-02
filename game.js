@@ -4,17 +4,20 @@ canvas.width = canvas.scrollWidth;
 canvas.height = canvas.scrollHeight;
 let button1 = document.getElementById("start").addEventListener("click",start);
 let button2 = document.getElementById("pause").addEventListener("click",paused);
-let button3 = document.getElementById("restart").addEventListener("click",restart);
+let button3 = document.getElementById("restart").addEventListener("click",start);
 let img=document.getElementById("img");
 let img1=document.getElementById("img1");
 let img2=document.getElementById("img2");
 var pause=false;
 var crash=false;
-var n=false;
 var k=0;
+var calls=0;
+var array=[];
+
 
 function paused(){
   document.getElementById("start").innerHTML="RESUME";
+  calls-=1;
   return pause=!pause , k=0;
 }
 function open(){
@@ -57,9 +60,6 @@ class Obstacle{
   stop(){
     this.cspeed=this.speed;
     this.speed=0;
-  }
-  play(){
-    this.speed=this.cspeed;
   }
 }
 
@@ -174,11 +174,14 @@ class Sound {
   }
   stop(){
       this.sound.pause();
-  }    
+  }  
+  restart(){
+    this.sound.currentTime=0;
+  }  
 }
 
-var sound = new Sound("song.mp3")
-var obj = [new Obstacle(80,30 ,130,0)]
+var sound = new Sound("song.mp3");
+var obj = [];
 var duet = new Duet(50,240,400,0.12,0); 
 new Input();
 var score = new Score(350, 30);
@@ -198,6 +201,19 @@ function updategame(){
       final_score=temp_score;
       final.text="SCORE: "+final_score;
       final.draw(ctx);
+
+      store(final_score);
+      final_score=0;
+      temp_score=0;
+      y=0;
+      k=0;
+      count=0;
+      pause=false;
+      obj=[];
+      sound.restart();
+      crash=false;
+      duet.angle=0;
+      clearTimeout(x);
       return;
       
     }
@@ -255,10 +271,11 @@ function updategame(){
       obj.push(new Obstacle(70,30,x,0));
     y=0;}
   }
-  setTimeout(updategame,16);
+  var x=setTimeout(updategame,20);
 }
 
 function start(){
+  calls+=1;
   pause=false;
   k=k+1;
   if (k==1){
@@ -268,7 +285,16 @@ function start(){
   }
  
 }
-
+var q=0;
+function store(score){
+  
+  array[calls-1]=score;
+  var ndiv = document.createElement('div');
+  document.getElementsByTagName('div')[0].appendChild(ndiv);
+  ndiv.innerHTML="Try "+ (q+1)+": " +array[q];
+  q+=1;
+  console.log(array);  
+}
 
 
 
