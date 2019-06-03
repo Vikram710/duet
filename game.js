@@ -465,6 +465,7 @@ function pushpower(){
   return Math.floor(z);
 }
 
+
 function pushpower1(){
   zz=zz+Math.random()*3;
   
