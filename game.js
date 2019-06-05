@@ -25,6 +25,7 @@ fcrash=false;
 var vs=1000;
 var kay=0;
 
+
 function paused(){
   document.getElementById("start").innerHTML="RESUME";
   calls-=1;
@@ -263,7 +264,7 @@ var final_score=0;
 
 function updategame(){
   for ( var i = 0; i<obj.length; i++){
-    if(duet.crash(obj[i])){ 
+    if(duet.crash(obj[i]) ){ 
       obj[i].stop();
 
       sound.stop();
@@ -279,8 +280,7 @@ function updategame(){
       k=0;
       count=0;
       pause=false;
-      obj=[];
-      holi=[];
+
       pcrash=false;
       sound.restart();
       crash=false;
@@ -290,6 +290,12 @@ function updategame(){
       fcrash=false;
       vs=1000;
       kay=0;
+      z=0;
+      zz=0;
+      obj=[];
+      holi=[];
+      duet.radius=50;
+      duet.rotate=0.12;
       clearTimeout(x);
       return;
       
@@ -319,7 +325,7 @@ function updategame(){
 
   //dlafhjsnkajf
 
-  if(pushpower()>1600 &&pushpower()!=0){
+  if(pushpower()>600 &&pushpower()!=0){
     z=0;
     holi.push(new Power(Math.random()*110+150));
 
@@ -330,6 +336,7 @@ function updategame(){
   holi[w].update_p();
   if(pcrash && gay==1)
   bs=temp_score;
+  spl=false;
 
 }
 
@@ -359,6 +366,7 @@ vs=temp_score;
     duet.stop();
     bs=1000;
     gay=0;
+    spl=true;
   }
 
 
@@ -416,9 +424,11 @@ function start(){
 }
 var q=0;
 var l=1;
+var tries=1;
 
 
 function store(score){
+    q=calls-1;
   if(q%2==0 && mp){
     var ndiv = document.createElement('div');
     document.getElementsByTagName('div')[0].appendChild(ndiv);
@@ -448,8 +458,9 @@ function store(score){
   array[calls-1]=score;
   var ndiv = document.createElement('div');
   document.getElementsByTagName('div')[0].appendChild(ndiv);
-  ndiv.innerHTML="Try "+ (q+1)+": " +array[q];
-  q+=1;}
+  ndiv.innerHTML="Try "+ tries+": " +array[q];
+  q+=1;
+tries+=1;}
  
 }
 
@@ -464,7 +475,6 @@ function pushpower(){
   
   return Math.floor(z);
 }
-
 
 function pushpower1(){
   zz=zz+Math.random()*3;
