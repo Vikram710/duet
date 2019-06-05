@@ -325,7 +325,7 @@ function updategame(){
 
   //dlafhjsnkajf
 
-  if(pushpower()>600 &&pushpower()!=0){
+  if(pushpower()>1400 &&pushpower()!=0){
     z=0;
     holi.push(new Power(Math.random()*110+150));
 
@@ -334,9 +334,11 @@ function updategame(){
   holi[w].draw(ctx , img3);
   duet.powerup(holi[w]);
   holi[w].update_p();
-  if(pcrash && gay==1)
+  if(pcrash && gay==1){
   bs=temp_score;
+  holi.splice(i,1);}
   spl=false;
+  
 
 }
 
@@ -350,8 +352,10 @@ for(var w=0;w<flight.length;w++){
 flight[w].draw(ctx , img4);
 duet.flight(flight[w]);
 flight[w].update_p();
-if(fcrash && kay==1)
+if(fcrash && kay==0){
 vs=temp_score;
+flight.splice(i,1);
+}
 
 }
 
@@ -429,6 +433,7 @@ var tries=1;
 
 function store(score){
     q=calls-1;
+
   if(q%2==0 && mp){
     var ndiv = document.createElement('div');
     document.getElementsByTagName('div')[0].appendChild(ndiv);
