@@ -1,2 +1,2 @@
 # game
-https://vikram710.github.io/game/
+https://vikram710.github.io/duet/
